@@ -1,5 +1,4 @@
 const sqlite3 = require('sqlite3').verbose();
-
 const express = require('express');
 const inputCheck = require('./utils/inputCheck');
 
@@ -75,24 +74,25 @@ app.post('/api/candidate', ({ body }, res) => {
       res.status(400).json({ error: errors });
       return;
     }
-  });
-
-// create a candidate
-const sql = `INSERT INTO candidates (first_name, last_name, industry_connected)
+    const sql = `INSERT INTO candidates (first_name, last_name, industry_connected)
                 VALUES (?, ?, ?)`;
-const params = [body.first_name, body.last_name, body.industry_connected];
-// es5 func not arrow yo use 'this'
-db.run(sql, params, function(err, result) {
-    if (err) {
-        res.status(400).json({ error: err.message });
-        return;
-    }
-    res.json({
-        message: 'success',
-        data: body,
-        id: this.lastID
+    const params = [body.first_name, body.last_name, body.industry_connected];
+    // es5 func not arrow yo use 'this'
+    db.run(sql, params, function(err, result) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: body,
+            id: this.lastID
+        });
     });
 });
+
+
+
 
 // Default response for any other requests(Not Found) Catch all
 app.use((req, res) => {
